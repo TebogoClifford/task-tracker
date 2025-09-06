@@ -32,3 +32,37 @@ def load_tasks():
 def save_tasks(tasks):
     with TASKS_FILE.open("w") as f:
         json.dump(tasks, f, indent=2)
+
+def add_task(description):
+    task = load_tasks()
+    
+    #finds the max idno 
+    next_id = max((t['id'] for t in task), default=0) + 1
+    
+    new_task = {
+        "id": next_id,
+        "description": description,
+        "status": "todo",
+        "createdAt": now(),
+        "updatedAt": now()
+    }
+    
+    task.append(new_task)
+    save_tasks(task)
+    print(f"task added successfully (ID: {next_id})")
+    
+def list_tasks(status=none):
+    task = load_tasks() 
+    
+    if status:
+        tasks = [t for t in tasks if t["status"] == status]
+        
+    if not tasks:
+        print("no tasks") 
+        return 
+    
+    print(f"{'ID':<3}{'status':<12}{'DESCRIPTION':<30}{'UPDATED'}")
+    print("-" * 70)
+    
+    for t in tasks:
+        print(f"{t['id']:<3} {t['status']:<12} {t['description']:<30} {t['updatedAt']}")
