@@ -23,5 +23,5 @@ Each task has:
 - createdAt
 - updatedAt
 
-## link
-https://github.com/TebogoClifford/task-tracker
+## project link
+[https://github.com/TebogoClifford/task-tracker](https://roadmap.sh/projects/task-tracker)
