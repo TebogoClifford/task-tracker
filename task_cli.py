@@ -66,3 +66,83 @@ def list_tasks(status=none):
     
     for t in tasks:
         print(f"{t['id']:<3} {t['status']:<12} {t['description']:<30} {t['updatedAt']}")
+        
+def update_task(task_id,new_description):
+    tasks = load_tasks()
+    
+    for t in tasks:
+        if t["ID"] == task_id:
+            t["description"] = new_description 
+            t["updatedAt"] = now() 
+            save_tasks(tasks)
+            print(f"task updated successfully (ID: {task_id})")
+            return
+    print(f"Error: Task with ID {task_id} not found")
+            
+def delete_task(task_id):
+    tasks = load_tasks()
+    
+    new_tasks = [t for t in tasks if t["id"] != task_id]
+    if len(new_tasks) == len(tasks):
+        print(f"error: task ID {task_id} not found")
+        return  
+    save_tasks(new_tasks)
+    print(f"task deleted successfully (ID: {task_id})")
+ 
+def mark_task(task_id, status):
+    tasks = load_tasks()
+    for t in tasks:
+        if t["id"] == task_id:
+            t["status"] = status
+            t["updatedAt"] = now()
+            save_tasks(tasks)
+            print(f"Task marked as {status} (ID: {task_id})")
+            return
+    print(f"Error: Task with ID {task_id} not found")
+    
+def main():
+    if len(sys.argv) < 2:
+        print("Usage: task-cli <command> [arguments]")
+        return
+
+    command = sys.argv[1]
+
+    if command == "add":
+        description = " ".join(sys.argv[2:])
+        add_task(description)
+
+    elif command == "list":
+        status = sys.argv[2] if len(sys.argv) > 2 else None
+        list_tasks(status)
+
+    elif command == "update":
+        if len(sys.argv) < 4:
+            print("Usage: task-cli update <id> <new description>")
+            return
+        task_id = int(sys.argv[2])
+        new_description = " ".join(sys.argv[3:])
+        update_task(task_id, new_description)
+
+    elif command == "delete":
+        if len(sys.argv) < 3:
+            print("Usage: task-cli delete <id>")
+            return
+        task_id = int(sys.argv[2])
+        delete_task(task_id)
+
+    elif command == "mark-in-progress":
+        task_id = int(sys.argv[2])
+        mark_task(task_id, "in-progress")
+
+    elif command == "mark-done":
+        task_id = int(sys.argv[2])
+        mark_task(task_id, "done")
+
+    else:
+        print(f"Unknown command: {command}")
+
+if __name__ == "__main__":
+    main()
+
+    
+    
